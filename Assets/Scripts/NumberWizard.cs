@@ -8,41 +8,16 @@ public class NumberWizard : MonoBehaviour
     [SerializeField] private int min;
     [SerializeField] private TextMeshProUGUI guessText;
     private int _guess;
-    private ArrayList checkedNumbers = new ArrayList();
 
     private void Start()
     {
-        max += 1;
-        min -= 1;
-        CalculateGuess();
+        NextGuess();
     }
 
-    private void CalculateGuess()
+    private void NextGuess()
     {
-        while (max - min > 1)
-        {
-            _guess = Random.Range(min, max);
-            
-            string output = "";
-            foreach (var i in checkedNumbers)
-            {
-                output += i + ", ";
-            }
-
-            Debug.Log("Checked numbers: " + output);
-            Debug.Log("Min - Max | Guess: " + min + " - " + max + " | " + _guess);
-
-            if (!checkedNumbers.Contains(_guess))
-            {
-                Debug.Log("New! " + _guess);
-          
-                checkedNumbers.Add(_guess);
-                guessText.text = _guess.ToString();
-                break;
-            }
-        }
-
-        Debug.Log("Loop ended");
+        _guess = Random.Range(min, max + 1);
+        guessText.text = _guess.ToString();
     }
 
     private void Update()
@@ -51,13 +26,13 @@ public class NumberWizard : MonoBehaviour
 
     public void OnPressHigher()
     {
-        min = _guess;
-        CalculateGuess();
+        min = min != max ? _guess + 1 : _guess;
+        NextGuess();
     }
 
     public void OnPressLower()
     {
-        max = _guess;
-        CalculateGuess();
+        max = min != max ? _guess - 1 : _guess;
+        NextGuess();
     }
 }
